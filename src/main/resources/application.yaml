@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: consumer-producer
+  cloud:
+    stream:
+      default:
+        group: ${spring.application.name}
+        consumer:
+          concurrency: 1   
+      bindings:
+        myInputTopic:
+          destination: "KT.myInputTopic"             
+        myOutputTopic:
+          destination: "KT.myOutputTopic"             
+          producer:
+            partition-key-expression: headers['partitionKey']
+      kafka:
+        default:
+          consumer:
+            enableDlq: true
+            autoCommitOnError: true
+            autoCommitOffset: true
+            max-attempts: 3
+            backOffInitialInterval: 1000
+            backOffMaxInterval: 10000
+            backOffMultiplier: 2.0
+            dlqname: KT.myDLQ
+#          configuration:
+#            max.poll.interval.ms: ${CLOUD_STREAM_BINDINGS_CONSUMER_MAX_POLL_INTERVAL_MS:600000}
+#            max.poll.records: ${CLOUD_STREAM_BINDINGS_CONSUMER_MAX_POLL_RECORD:10}
+#            session.timeout.ms: ${CLOUD_STREAM_BINDINGS_CONSUMER_SESSION_TIMEOUT_MS:60000}
+#            heartbeat.interval.ms: ${CLOUD_STREAM_BINDINGS_CONSUMER_HEARTBEAT_INTERVAL_MS:20000}      
+        binder:
+          brokers: localhost:29092
+          headers: My-EventType
+          headerMapperBeanName: customKafkaHeaderMapper
+          replicationFactor: 1
+          consumer-properties:
+            key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          producer-properties:
+            key.serializer: org.apache.kafka.common.serialization.StringSerializer
+          configuration:
+            isolation.level: read_committed
+          transaction:
+            producer:
+              configuration:
+                retries: 1
+                acks: all
+            transactionIdPrefix: ${spring.application.name}-${random.uuid}-tx
+          auto-create-topics: true
+
+
+server:
+  port: 8080           
