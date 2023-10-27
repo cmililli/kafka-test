@@ -1,0 +1,33 @@
+[
+  {
+    "key": null,
+    "value": {
+      "subject": "Sono l'oggetto",
+      "message": "Corpo del messaggio"
+    },
+    "headers": [
+      {
+        "key": "My-EventType",
+        "value": "MyInputEvent",
+        "type": "string"
+      },
+      {
+        "key": "spring_json_header_types",
+        "value": "{\"My-EventType\":\"java.lang.String\",\"contentType\":\"java.lang.String\"}",
+        "type": "string"
+      },
+      {
+        "key": "partitionKey",
+        "value": "myPartitionKey",
+        "type": "string"
+      },
+	  {
+        "key": "contentType",
+        "value": "\"application/json\"",
+        "type": "string"
+      }
+    ],
+    "keyMeta": {},
+    "valueMeta": {}
+  }
+]
